@@ -36,9 +36,9 @@ const verifyToken = async (req, res, next) => {
   })
 }
 
-// const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.mq0mae1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ot76b.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
+// const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ot76b.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const uri = 'mongodb://localhost:27017/'
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
   serverApi: {
@@ -49,9 +49,14 @@ const client = new MongoClient(uri, {
 })
 async function run() {
   try {
+
+    const db = client.db('plantNet-session')
+    const usersCollection = db.collection('users')
+    const plantsCollection = db.collection('plants')
     // Generate jwt token
     app.post('/jwt', async (req, res) => {
       const email = req.body
+      console.log('line 55 ====>',email)
       const token = jwt.sign(email, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: '365d',
       })
@@ -77,6 +82,35 @@ async function run() {
         res.status(500).send(err)
       }
     })
+
+
+
+    app.post('/plants',async(req,res)=>{
+      const plant = req.body
+      const result = await plantsCollection.insertOne(plant)
+      res.send(result)
+    })
+
+    //users
+    app.post('/users/:email',async(req,res)=>{
+      const users = req.body
+      const email = req.params.email
+      const query = {email}
+      const isExist = await usersCollection.findOne(query)
+      if (isExist) {
+        res.send(isExist)
+      }
+      const result = await usersCollection.insertOne({
+        ...users,
+        role: 'customer',
+        timestamp:Date.now()
+      })
+
+      res.send(result)
+    })
+
+
+
 
     // Send a ping to confirm a successful connection
     await client.db('admin').command({ ping: 1 })
