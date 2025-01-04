@@ -3,7 +3,7 @@ import { FcGoogle } from 'react-icons/fc'
 import useAuth from '../../hooks/useAuth'
 import { toast } from 'react-hot-toast'
 import { TbFidgetSpinner } from 'react-icons/tb'
-import axios from 'axios'
+// import axios from 'axios'
 import { uploadImage } from '../../api/utils'
 
 const SignUp = () => {
@@ -27,7 +27,7 @@ const SignUp = () => {
     // console.log(data)
     try {
       //2. User Registration
-      const result = await createUser(email, password)
+      await createUser(email, password);
 
       //3. Save username & profile photo
       await updateUserProfile(

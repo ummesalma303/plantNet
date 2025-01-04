@@ -1,5 +1,11 @@
-const AddPlantForm = ({handleSubmit}) => {
- 
+import { useState } from "react";
+import { uploadImage } from "../../api/utils";
+
+const AddPlantForm = ({handleSubmit,uploadButtonImage,setUploadImage}) => {
+  // const [image,setImage] = useState(null)
+  console.log(uploadButtonImage);
+  // setUploadImage()
+  // console.log(uploadButtonImage)
   return (
     <div className='w-full min-h-[calc(100vh-40px)] flex flex-col justify-center items-center text-gray-800 rounded-xl bg-gray-50'>
       <form onSubmit={handleSubmit}>
@@ -87,7 +93,7 @@ const AddPlantForm = ({handleSubmit}) => {
               <div className='file_upload px-5 py-3 relative border-4 border-dotted border-gray-300 rounded-lg'>
                 <div className='flex flex-col w-max mx-auto text-center'>
                   <label>
-                    <input
+                    <input onChange={(e)=>setUploadImage(e.target.files[0])}
                       className='text-sm cursor-pointer w-36 hidden'
                       type='file'
                       name='image'
@@ -95,8 +101,19 @@ const AddPlantForm = ({handleSubmit}) => {
                       accept='image/*'
                       hidden
                     />
+                    {
+                      uploadButtonImage &&(<p>{uploadButtonImage?.size} bytes</p>)
+
+                    }
+                     {/* {uploadButtonImage && uploadButtonImage?.image?.size && (
+              <div className='flex gap-5 items-center'>
+                <img className='w-20' src={uploadImage?.url} alt='' />
+                <p>Image Size: {uploadImage?.image?.size} Bytes</p>
+              </div>
+            )} */}
+                    {/* <div>{image&& <img src={image?.name}/>}</div> */}
                     <div className='bg-lime-500 text-white border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3 hover:bg-lime-500'>
-                      Upload
+                     {uploadButtonImage?.image?.name}
                     </div>
                   </label>
                 </div>
