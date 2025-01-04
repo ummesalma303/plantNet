@@ -56,10 +56,11 @@ async function run() {
     // Generate jwt token
     app.post('/jwt', async (req, res) => {
       const email = req.body
-      console.log('line 55 ====>',email)
+      // console.log('line 55 ====>',email)
       const token = jwt.sign(email, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: '365d',
       })
+
       res
         .cookie('token', token, {
           httpOnly: true,
@@ -84,6 +85,11 @@ async function run() {
     })
 
 
+    app.get('/plant',async (req,res)=>{
+      const result = await plantsCollection.find().toArray()
+      console.log(result)
+      res.send(result)
+    })
 
     app.post('/plants',async(req,res)=>{
       const plant = req.body
@@ -97,8 +103,9 @@ async function run() {
       const email = req.params.email
       const query = {email}
       const isExist = await usersCollection.findOne(query)
-      if (isExist) {
-        res.send(isExist)
+      
+       if (isExist) {
+        return res.send(isExist)
       }
       const result = await usersCollection.insertOne({
         ...users,
