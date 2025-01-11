@@ -1,8 +1,12 @@
 import { Helmet } from 'react-helmet-async'
 
 import PlantDataRow from '../../../components/Dashboard/TableRows/PlantDataRow'
+import { useContext } from 'react'
+import { AuthContext } from '../../../providers/AuthProvider'
 
 const MyInventory = () => {
+  const {user} = useContext(AuthContext);
+  console.log(user)
   return (
     <>
       <Helmet>

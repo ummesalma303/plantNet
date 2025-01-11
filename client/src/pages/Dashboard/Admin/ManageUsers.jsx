@@ -1,7 +1,11 @@
 import { Helmet } from 'react-helmet-async'
 import UserDataRow from '../../../components/Dashboard/TableRows/UserDataRow'
+// import { useContext } from 'react'
+// import { AuthContext } from '../../../providers/AuthProvider'
 
 const ManageUsers = () => {
+  // const {user} = useContext(AuthContext);
+
   return (
     <>
       <div className='container mx-auto px-4 sm:px-8'>

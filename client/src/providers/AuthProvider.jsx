@@ -63,7 +63,9 @@ const AuthProvider = ({ children }) => {
         }
         await axios.post(
           `${import.meta.env.VITE_API_URL}/users/${currentUser?.email}`,user)
-          .then(res=>console.log(res.data))
+          .then(res=>{
+            // console.log(res.data)
+          })
 
 
         // Get JWT token

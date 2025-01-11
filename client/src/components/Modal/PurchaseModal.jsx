@@ -8,8 +8,11 @@ import {
 } from '@headlessui/react'
 import { Fragment } from 'react'
 
-const PurchaseModal = ({ closeModal, isOpen }) => {
+const PurchaseModal = ({ closeModal, isOpen,plant }) => {
   // Total Price Calculation
+  const {
+    seller,category,
+    name,price} =plant|| {}
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -45,17 +48,17 @@ const PurchaseModal = ({ closeModal, isOpen }) => {
                   Review Info Before Purchase
                 </DialogTitle>
                 <div className='mt-2'>
-                  <p className='text-sm text-gray-500'>Plant: Money Plant</p>
+                  <p className='text-sm text-gray-500'>Plant: {name}</p>
                 </div>
                 <div className='mt-2'>
-                  <p className='text-sm text-gray-500'>Category: Indoor</p>
+                  <p className='text-sm text-gray-500'>Category: {category}</p>
                 </div>
                 <div className='mt-2'>
                   <p className='text-sm text-gray-500'>Customer: PH</p>
                 </div>
 
                 <div className='mt-2'>
-                  <p className='text-sm text-gray-500'>Price: $ 120</p>
+                  <p className='text-sm text-gray-500'>Price: $ {price}</p>
                 </div>
                 <div className='mt-2'>
                   <p className='text-sm text-gray-500'>Available Quantity: 5</p>
