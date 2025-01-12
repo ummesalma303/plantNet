@@ -26,7 +26,7 @@ const PurchaseModal = ({ closeModal, isOpen, plant,refetch }) => {
   const [totalPrice, setTotalPrice] = useState(price);
 
   const handleQuantity = (value) => {
-    let min = 1 
+    let min = 0 
     let max = quantity
     let val= Math.max(min,Math.min(max,value))
     // console.log(val)

@@ -88,6 +88,55 @@ async function run() {
       }
     })
 
+
+    //users
+    app.post('/users/:email',async(req,res)=>{
+      const users = req.body
+      const email = req.params.email
+      const query = {email}
+      const isExist = await usersCollection.findOne(query)
+      
+       if (isExist) {
+        return res.send(isExist)
+      }
+      const result = await usersCollection.insertOne({
+        ...users,
+        role: 'customer',
+        timestamp:Date.now()
+      })
+
+      res.send(result)
+    })
+    
+// admin and seller and users
+app.patch('/users/:email',async(req,res) =>{
+  const email = req.params.email
+  const query = {email}
+  const user = await usersCollection.findOne(query);
+  console.log('178---->',user)
+  if (user?.status === 'Requested') {
+    return res
+    .status(400)
+    .send('You have already requested, wait for some time.')
+  }
+  const updateDoc = {
+    $set: {
+      status: 'Requested',
+    },
+  }
+  const result = await usersCollection.updateOne(query,updateDoc);
+  res.send(result)
+})
+
+
+app.get('/users/:email',async (req,res)=>{
+  const email = req.params.email
+  const query = {email:{$ne:email}}
+  const result = await usersCollection.find(query).toArray()
+  // console.log(result)
+  res.send(result)
+})
+
 // plants
 app.get('/plants/:id',async(req,res)=>{
   const id = req.params.id
@@ -110,24 +159,7 @@ app.get('/plants/:id',async(req,res)=>{
       res.send(result)
     })
 
-    //users
-    app.post('/users/:email',async(req,res)=>{
-      const users = req.body
-      const email = req.params.email
-      const query = {email}
-      const isExist = await usersCollection.findOne(query)
-      
-       if (isExist) {
-        return res.send(isExist)
-      }
-      const result = await usersCollection.insertOne({
-        ...users,
-        role: 'customer',
-        timestamp:Date.now()
-      })
 
-      res.send(result)
-    })
 
 // orders
 app.get('/order/:email',async (req,res)=>{
@@ -146,24 +178,21 @@ app.post('/order',async(req,res)=>{
 
 app.delete('/orders/:id',async (req,res)=>{
   const id = req.params.id
-  console.log('148-------->',id)
   const query = { _id: new ObjectId(id) }
-  console.log(query)
   const result = await orderCollection.deleteOne(query)
   res.send(result)
 })
 
 app.patch('/plants/quantity/:id',async (req,res) =>{
   const id = req.params.id
-  console.log('158------>',id)
+  // console.log('158------>',id)
   const {quantityToUpdate, status} = req.body
   const filter = {_id: new ObjectId(id)};
   console.log(filter)
   let updateDoc = {
     $inc: {quantity: -quantityToUpdate}
   }
-//  92 678355d7f357ccda89c80689
-// 678363b411be5452d3a5f580
+
   if (status === 'increase') {
     updateDoc = {
       $inc: {quantity: quantityToUpdate}
@@ -173,8 +202,6 @@ app.patch('/plants/quantity/:id',async (req,res) =>{
   console.log(result)
   res.send(result)
 })
-
-
 
 
     // Send a ping to confirm a successful connection
