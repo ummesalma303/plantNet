@@ -13,25 +13,25 @@ import { AuthContext } from "../../providers/AuthProvider";
 // import useAxiosPublic, { axiosPublic } from '../../hooks/useAxiosPublic'
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 
-const PurchaseModal = ({ closeModal, isOpen, plant }) => {
+const PurchaseModal = ({ closeModal, isOpen, plant,refetch }) => {
   const axiosSecure = useAxiosSecure();
   const { user } = useContext(AuthContext);
   // console.log(user);
   // Total Price Calculation
-  // const [disabled,setDisable] = useState(false)
+  const [disable,setDisable] = useState(false)
   const [address, setAddress] = useState("");
   // console.log( address  )
   const [totalQuantity, setTotalQuantity] = useState(1);
-  const { _id, seller, category, name, price, quantity } = plant || {};
+  const { _id, seller, category, name,image, price, quantity } = plant || {};
   const [totalPrice, setTotalPrice] = useState(price);
 
   const handleQuantity = (value) => {
-    let min = 0 
+    let min = 1 
     let max = quantity
     let val= Math.max(min,Math.min(max,value))
-    console.log(val)
+    // console.log(val)
     setTotalQuantity(val);
-    console.log(totalQuantity)
+    // console.log(totalQuantity)
     if (value > quantity || value < 0) {
 
       // console.log(value);
@@ -44,16 +44,23 @@ const PurchaseModal = ({ closeModal, isOpen, plant }) => {
   };
 
 
-  const handlePurchase = async () => {
+  const handlePurchase = async (id,quantity) => {
+    
+  if (quantity<=0) {
+    setDisable(true)
+    return
+  }
     const purchaseInfo = {
       customer: {
         name: user?.displayName,
         email: user?.email,
         image: user?.photoURL,
       },
+      image,
       plantId: _id,
       price: totalPrice,
-      quantity: totalQuantity,
+      category,
+      quantity: parseInt(totalQuantity),
       seller: seller?.email,
       address: address,
       status: "Pending",
@@ -66,10 +73,14 @@ const PurchaseModal = ({ closeModal, isOpen, plant }) => {
       .catch((err) => console.log(err));
       
 
-  //  await axiosSecure
-  //     .patch(`/plants/quantity/${id}`,{ quantityToUpdate:totalQuantity,status: 'decrease'})
-  //     .then((res) => console.log(res.data))
-  //     .catch((err) => console.log(err));
+   await axiosSecure
+      .patch(`/plants/quantity/${id}`,{ quantityToUpdate:totalQuantity,status: 'decrease'})
+      .then((res) => {
+        console.log(res.data)
+      
+        refetch()
+      })
+      .catch((err) => console.log(err));
 
   };
 
@@ -157,8 +168,8 @@ const PurchaseModal = ({ closeModal, isOpen, plant }) => {
                   />
                 </div>
                 <div className="mt-3">
-                  <Button
-                    onClick={()=>handlePurchase(_id)}
+                  <Button disabled={disable}
+                    onClick={()=>handlePurchase(_id,quantity)}
                     label={`Purchase ${totalPrice}`}
                   />
                 </div>

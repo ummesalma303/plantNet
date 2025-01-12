@@ -14,7 +14,7 @@ const PlantDetails = () => {
   const axiosPublic = useAxiosPublic()
   const {id} = useParams()
   // console.log(id)
-  const {data:plant = {}} = useQuery({
+  const {data:plant = {},refetch} = useQuery({
     queryKey:['plant',id],
     queryFn: async () => {
       const res = await axiosPublic.get(`http://localhost:9000/plants/${id}`)
@@ -102,7 +102,7 @@ const PlantDetails = () => {
           </div>
           <hr className='my-6' />
 
-          <PurchaseModal closeModal={closeModal} isOpen={isOpen} plant={plant} />
+          <PurchaseModal closeModal={closeModal} isOpen={isOpen} plant={plant} refetch={refetch} />
 
           <div className='md:col-span-3 order-first md:order-last mb-10'>
             {/* RoomReservation */}

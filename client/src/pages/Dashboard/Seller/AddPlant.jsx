@@ -31,8 +31,8 @@ const AddPlant = () => {
       name,
       category,
       description,
-      price,
-      quantity,
+      price:parseInt(price),
+      quantity:parseInt(quantity),
       image: imageUrl,
       seller,
     }

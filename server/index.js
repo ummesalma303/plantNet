@@ -56,6 +56,7 @@ async function run() {
     const db = client.db('plantNet-session')
     const usersCollection = db.collection('users')
     const plantsCollection = db.collection('plants')
+    const orderCollection = db.collection('orders')
     // Generate jwt token
     app.post('/jwt', async (req, res) => {
       const email = req.body
@@ -127,6 +128,51 @@ app.get('/plants/:id',async(req,res)=>{
 
       res.send(result)
     })
+
+// orders
+app.get('/order/:email',async (req,res)=>{
+  const email = req.params.email
+  const filter = {'customer.email':email} 
+  const result = await orderCollection.find(filter).toArray()
+  res.send(result)
+})
+
+app.post('/order',async(req,res)=>{
+  const order = req.body
+  const result = await orderCollection.insertOne(order);
+  console.log(result)
+  res.send(result)
+})
+
+app.delete('/orders/:id',async (req,res)=>{
+  const id = req.params.id
+  console.log('148-------->',id)
+  const query = { _id: new ObjectId(id) }
+  console.log(query)
+  const result = await orderCollection.deleteOne(query)
+  res.send(result)
+})
+
+app.patch('/plants/quantity/:id',async (req,res) =>{
+  const id = req.params.id
+  console.log('158------>',id)
+  const {quantityToUpdate, status} = req.body
+  const filter = {_id: new ObjectId(id)};
+  console.log(filter)
+  let updateDoc = {
+    $inc: {quantity: -quantityToUpdate}
+  }
+//  92 678355d7f357ccda89c80689
+// 678363b411be5452d3a5f580
+  if (status === 'increase') {
+    updateDoc = {
+      $inc: {quantity: quantityToUpdate}
+    }
+  }
+  const result = await plantsCollection.updateOne(filter,updateDoc)
+  console.log(result)
+  res.send(result)
+})
 
 
 
