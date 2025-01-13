@@ -13,6 +13,7 @@ import { AuthContext } from "../../providers/AuthProvider";
 // import useAxiosPublic, { axiosPublic } from '../../hooks/useAxiosPublic'
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 
+
 const PurchaseModal = ({ closeModal, isOpen, plant,refetch }) => {
   const axiosSecure = useAxiosSecure();
   const { user } = useContext(AuthContext);
@@ -32,6 +33,10 @@ const PurchaseModal = ({ closeModal, isOpen, plant,refetch }) => {
     // console.log(val)
     setTotalQuantity(val);
     // console.log(totalQuantity)
+    // if (isNaN(value)) {
+    //   setTotalQuantity(totalQuantity)
+    // }
+
     if (value > quantity || value < 0) {
 
       // console.log(value);
