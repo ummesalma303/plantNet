@@ -137,6 +137,15 @@ app.get('/users/:email',async (req,res)=>{
   res.send(result)
 })
 
+
+app.get('/users/role/:email',async (req,res)=>{
+  const email = req.params.email
+  // const query = {email:{$ne:email}}
+  const result = await usersCollection.findOne({email})
+  // console.log(result)
+  res.send({role: result?.role })
+})
+
 // plants
 app.get('/plants/:id',async(req,res)=>{
   const id = req.params.id
